@@ -55,7 +55,7 @@ public class CustomVpnConnection extends Thread {
     /**
      * Maximum packet size is constrained by the MTU
      */
-    private static final int MAX_PACKET_SIZE = 1500;
+    private static final int MAX_PACKET_SIZE = 1400;
 
     @Getter
     private final int connectionId;
