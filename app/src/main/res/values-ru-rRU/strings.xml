@@ -174,4 +174,17 @@ https://play.google.com/store/apps/details?id=org.fptn.vpn
     <string name="disallowed_apps_radio_button_label">Все приложения используют VPN, кроме выбранных</string>
     <string name="disallowed_apps_radio_button_label_additional_info">Все приложения используют VPN, кроме выбранных</string>
 
+    <string name="auto_sni_label">Автоподбор SNI</string>
+    <string name="sni_features_label">Настройки SNI</string>
+
+    <string name="load_sni_from_file">Загрузить SNI из файла</string>
+    <string name="delete_loaded_sni">Удалить загруженные SNI</string>
+    <string name="auto_select_sni">Запустить автоподбор SNI</string>
+    <string name="loaded_sni_label">Загруженные в локальную БД SNI:</string>
+
+    <string name="select_server_for_autoselect">Выберите сервер для автоподбора SNI</string>
+    <string name="start_sni_checking_button_label">Запустить</string>
+    <string name="selected_server">Selected server</string>
+    <string name="checking_current_sni">Cheching SNI:</string>
+
 </resources>
