@@ -312,6 +312,9 @@ public class BypassMethodsActivity extends AppCompatActivity {
         buttonCancel.setOnClickListener(v -> {
             Log.d(TAG, "Auto-select dialog cancelled.");
 
+            ToggleButton startStopCheckingSniButton = findViewById(R.id.auto_select_sni_button);
+            startStopCheckingSniButton.setChecked(false);
+
             autoSelectDialog.dismiss();
         });
 
@@ -327,11 +330,6 @@ public class BypassMethodsActivity extends AppCompatActivity {
             autoSelectDialog.dismiss();
         });
 
-        autoSelectDialog.setOnCancelListener(dialog -> {
-            ToggleButton startStopCheckingSniButton = findViewById(R.id.auto_select_sni_button);
-            startStopCheckingSniButton.setChecked(false);
-        });
-
         autoSelectDialog.show();
     }
 
@@ -342,14 +340,11 @@ public class BypassMethodsActivity extends AppCompatActivity {
     private void onLoadButtonClicked() {
         // Create an intent to open the file picker
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        // We are looking for any kind of file, but you could restrict it,
-        // for example, to "text/plain" for text files.
-        intent.setType("text/plain");
+        intent.setType("*/*"); // Allow all types
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-
         try {
             // Launch the intent using the ActivityResultLauncher
-            filePickerLauncher.launch(Intent.createChooser(intent, "Select a SNI file"));
+            filePickerLauncher.launch(Intent.createChooser(intent, "Select a *.sni file"));
         } catch (ActivityNotFoundException ex) {
             // Potentially handle the case where the device has no file manager
             Toast.makeText(this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
