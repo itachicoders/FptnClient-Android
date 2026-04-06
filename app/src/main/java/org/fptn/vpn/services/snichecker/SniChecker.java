@@ -5,32 +5,58 @@ import android.util.Log;
 import org.fptn.vpn.database.entity.ServerEntity;
 import org.fptn.vpn.enums.BypassCensorshipMethod;
 
-import java.util.Random;
 
 public class SniChecker {
     private final String TAG = getClass().getSimpleName();
     private final ServerEntity selectedServer;
     private final BypassCensorshipMethod bypassCensorshipMethod;
+    private long nativeHandle = 0;
 
-    public final Random RANDOM = new Random();
+    static {
+        System.loadLibrary("fptn_native_lib");
+    }
 
     public SniChecker(ServerEntity selectedServer, BypassCensorshipMethod bypassCensorshipMethod) {
         this.selectedServer = selectedServer;
         this.bypassCensorshipMethod = bypassCensorshipMethod;
+        this.nativeHandle = nativeCreate(
+                selectedServer.getHost(),
+                selectedServer.getPort(),
+                selectedServer.getMd5ServerFingerprint(),
+                bypassCensorshipMethod.name()
+        );
     }
 
     public boolean checkSni(String sni) {
         Log.d(TAG, "checkSni: " + sni);
 
-        // todo: replace with real check
-        try {
-            long sleepTime = RANDOM.nextInt(1000) + 100;
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        if (nativeHandle == 0) {
+            Log.e(TAG, "Native handle is null");
             return false;
         }
-
-        return RANDOM.nextInt(1000) > 950;
+        return nativeCheckSni(nativeHandle, sni);
     }
+
+    public void close() {
+        if (nativeHandle != 0) {
+            nativeDestroy(nativeHandle);
+            nativeHandle = 0;
+        }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            close();
+        } finally {
+            super.finalize();
+        }
+    }
+
+    // Native methods
+    private native long nativeCreate(String host, int port, String md5Fingerprint, String censorshipStrategy);
+
+    private native boolean nativeCheckSni(long nativeHandle, String sni);
+
+    private native void nativeDestroy(long nativeHandle);
 }
